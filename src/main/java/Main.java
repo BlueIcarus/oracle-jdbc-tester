@@ -19,8 +19,8 @@ public class Main {
 
         Class.forName("oracle.jdbc.driver.OracleDriver");
 
-        if (args.length != 3) {
-            LOG.error("Invalid number of arguments: Must provide 3 arguments in the format: <schema_name> <schema_password> jdbc:oracle:thin:@//<host>:<port>/<SID>");
+        if (args.length != 3 || args.length != 4) {
+            LOG.error("Invalid number of arguments: Must provide 3 or 4 arguments in the format: <schema_name> <schema_password> jdbc:oracle:thin:@//<host>:<port>/<SID> <sql_statement>");
             return;
         }
 
@@ -32,6 +32,10 @@ public class Main {
         try {
             LOG.info("****** Starting JDBC Connection test *******");
             String sqlQuery = "select sysdate from dual";
+            if (args.length == 4) {
+                sqlQuery = args[3];
+                LOG.info("  Changing default SQL command to: [{}]", sqlQuery);
+            }
 
             Connection conn = DriverManager.getConnection(args[2], properties);
             conn.setAutoCommit(false);
